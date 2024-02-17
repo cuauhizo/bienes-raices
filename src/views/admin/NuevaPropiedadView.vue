@@ -2,13 +2,18 @@
 import { useForm, useField } from "vee-validate";
 import { collection, addDoc } from "firebase/firestore";
 import { useFirestore } from "vuefire";
-import { useRouter } from 'vue-router'
-import { validationSchema, imageSchema } from "@/validation/propiedadSchema"
-import useImage from '@/composables/useImage.js'
+import { useRouter } from "vue-router";
+import { validationSchema, imageSchema } from "@/validation/propiedadSchema";
+import useImage from "@/composables/useImage.js";
+import useLocationMap from "@/composables/useLocationMap.js";
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+
 
 const items = [1, 2, 3, 4, 5];
 
-const { url, uploadImage, image } = useImage()
+const { url, uploadImage, image } = useImage();
+const { zoom, center, pin } = useLocationMap()
 const router = useRouter();
 const db = useFirestore();
 
@@ -27,20 +32,21 @@ const wc = useField("wc");
 const estacionamiento = useField("estacionamiento");
 const descripcion = useField("descripcion");
 const alberca = useField("alberca", null, {
-  initialValue: false
+  initialValue: false,
 });
 
 const submit = handleSubmit(async (values) => {
   const { imagen, ...propiedad } = values;
 
-    const docRef = await addDoc(collection(db, "propiedades"), {
-      ...propiedad,
-      imagen: url.value
-    });
+  const docRef = await addDoc(collection(db, "propiedades"), {
+    ...propiedad,
+    imagen: url.value,
+    ubicacion: center.value
+  });
 
-    if (docRef.id) {
-      router.push({ name: 'admin-propiedades'})
-    }
+  if (docRef.id) {
+    router.push({ name: "admin-propiedades" });
+  }
 });
 </script>
 <template>
@@ -69,7 +75,7 @@ const submit = handleSubmit(async (values) => {
       />
       <div v-if="image" class="my-5">
         <p class="font-weight-bold">Imagen Propiedad</p>
-        <img class="w-50" :src="image" >
+        <img class="w-50" :src="image" />
       </div>
       <v-text-field
         class="mb-5"
@@ -117,6 +123,27 @@ const submit = handleSubmit(async (values) => {
         v-model="alberca.value.value"
         :error-messages="alberca.errorMessage.value"
       />
+      <h2 class="font-weight-bold text-center my-5">Ubicación</h2>
+      <div class="pb-10">
+        <div style="height: 600px">
+          <LMap
+            v-model:zoom="zoom"
+            :center="center"
+            :use-global-leaflet="false"
+          >
+          <LMarker
+          :lat-lng="center"
+          draggable
+          @moveend="pin"
+          />
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              layer-type="base"
+              name="OpenStreetMap"
+            ></LTileLayer>
+          </LMap>
+        </div>
+      </div>
       <v-btn block color="pink-accent-3" @click="submit">
         Agregar Propiedad
       </v-btn>
