@@ -10,7 +10,7 @@ export default function useLocationMap() {
 
     const marker = e.target.getLatLng()
     center.value = [marker.lat, marker.lng]
-    console.log(center.value);
+    // console.log(center.value);
   }
 
   return {
