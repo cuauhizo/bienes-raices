@@ -20,7 +20,7 @@ watch(propiedad, (propiedad) => {
 </script>
 
 <template>
-  <pre>{{ propiedad }}</pre>
+  <!-- <pre>{{ propiedad }}</pre> -->
   <v-card flat>
     <v-card-title class="mt-5 text-h3 text-center py-5 font-weight-bold">
       {{ propiedad?.titulo }}
