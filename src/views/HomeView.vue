@@ -12,7 +12,7 @@ const { alberca, filteredItems } = usePropiedades()
 
     <v-card flat class="py-10">
         <v-card-title class="text-h5">
-            Búsqueda
+            Búsqueda por
             <v-checkbox
             label="Alberca" v-model="alberca"
             />
