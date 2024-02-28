@@ -1,23 +1,51 @@
 <script setup>
-import { RouterView } from "vue-router"
-import { useAuthStore } from '@/stores/auth'
+import { ref, watch } from "vue";
+import { RouterView } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { useDisplay } from "vuetify";
 
-const auth = useAuthStore()
+const auth = useAuthStore();
+const currentBreakpoint = ref("");
+const { sm, md, lg, xl } = useDisplay();
+const drawer = ref(false);
+const group = ref(null);
+
+watch(group, () => {
+  drawer.value = false;
+});
+
+watch([sm, md, lg, xl], ([isSm, isMd, isLg, isXl]) => {
+  if (isXl) {
+    currentBreakpoint.value = "xl";
+  } else if (isLg) {
+    currentBreakpoint.value = "lg";
+  } else if (isMd) {
+    currentBreakpoint.value = "md";
+  } else if (isSm) {
+    currentBreakpoint.value = "sm";
+  } else {
+    currentBreakpoint.value = "xs";
+  }
+});
 </script>
 
 <template>
   <v-card elevation="3" max-width="1200" class="mx-auto">
     <v-layout>
       <v-app-bar color="blue-darken-1">
-        <template v-slot:prepend>
-          <v-btn :to="{ name: 'home' }">
-            Bienes Raices - Vuefire
-          </v-btn>
-        </template>
-        <template v-slot:append>
+        <v-toolbar-title>
+          <v-btn :to="{ name: 'home' }"> Bienes Raices </v-btn>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-app-bar-nav-icon
+          v-if="currentBreakpoint === 'sm' || currentBreakpoint === 'xs'"
+          variant="text"
+          @click.stop="drawer = !drawer"
+        ></v-app-bar-nav-icon>
+        <template v-else>
           <div v-if="auth.isAuth">
             <v-btn :to="{ name: 'admin-propiedades' }"> Admin </v-btn>
-            <v-btn @click="auth.logout" > Cerrar Sesión </v-btn>
+            <v-btn @click="auth.logout"> Cerrar Sesión </v-btn>
           </div>
           <div v-else>
             <v-btn :to="{ name: 'home' }"> Inicio </v-btn>
@@ -25,9 +53,22 @@ const auth = useAuthStore()
           </div>
         </template>
       </v-app-bar>
+      <v-navigation-drawer v-model="drawer" location="bottom" temporary>
+        <v-list v-if="auth.isAuth">
+          <v-list-item :to="{ name: 'admin-propiedades' }"> Admin </v-list-item>
+          <v-list-item @click="auth.logout"> Cerrar Sesión </v-list-item>
+        </v-list>
+        <v-list v-else>
+          <v-list-item :to="{ name: 'home' }"> Inicio </v-list-item>
+          <v-list-item :to="{ name: 'login' }"> Iniciar Sesión </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
       <v-main>
+        <!-- <div>
+          <p>Current breakpoint: {{ currentBreakpoint }}</p>
+        </div> -->
         <v-container>
-          <RouterView/>
+          <RouterView />
         </v-container>
       </v-main>
     </v-layout>
