@@ -51,10 +51,10 @@ const submit = handleSubmit(async (values) => {
 </script>
 <template>
   <v-card max-width="800" flat class="mx-auto my-10">
-    <v-card-title class="text-h4 font-weight-bold" tag="h3">
+    <v-card-title class="text-h5 text-md-h4 font-weight-bold text-wrap" tag="h3">
       Nueva Propiedad
     </v-card-title>
-    <v-card-subtitle class="text-h5 py-5">
+    <v-card-subtitle class="text-h6 text-md-h5 py-5 text-wrap">
       Crea una nueva propiedad llenando el siguiente formulario
     </v-card-subtitle>
     <v-form class="mt-10">

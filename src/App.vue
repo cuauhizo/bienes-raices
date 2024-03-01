@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useDisplay } from "vuetify";
+import IrArriba from '@/components/IrArriba.vue'
 
 const auth = useAuthStore();
 const currentBreakpoint = ref("");
@@ -89,6 +90,7 @@ watch([sm, md, lg, xl], ([isSm, isMd, isLg, isXl]) => {
         </div> -->
         <v-container>
           <RouterView />
+          <IrArriba/>
         </v-container>
       </v-main>
     </v-layout>
