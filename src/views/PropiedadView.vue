@@ -22,7 +22,7 @@ watch(propiedad, (propiedad) => {
 <template>
   <!-- <pre>{{ propiedad }}</pre> -->
   <v-card flat >
-    <v-card-title class="mt-5 text-h4 text-md-h3 text-center py-5 font-weight-bold">
+    <v-card-title tag="h1" class="mt-md-5 text-h4 text-md-h3 text-center py-5 font-weight-bold text-wrap">
       {{ propiedad?.titulo }} 
     </v-card-title>
     <v-img :src="propiedad?.imagen" height="550" cover />
